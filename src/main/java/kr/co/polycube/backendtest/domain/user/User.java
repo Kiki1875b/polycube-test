@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
   @Id
@@ -24,6 +24,10 @@ public class User {
   private String name;
 
   public User(String name){
+    this.name = name;
+  }
+
+  public void updateName(String name){
     this.name = name;
   }
 }
