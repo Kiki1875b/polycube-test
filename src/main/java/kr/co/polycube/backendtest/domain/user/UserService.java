@@ -1,5 +1,7 @@
 package kr.co.polycube.backendtest.domain.user;
 
+import kr.co.polycube.backendtest.common.exception.base.ErrorCode;
+import kr.co.polycube.backendtest.common.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,6 @@ public class UserService {
 
   private User findOrThrowUser(Long id){
     return userRepositoryPort.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("USER NOT FOUND")); // TODO : 도메인 예외로 수정하기
+        .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
   }
 }
