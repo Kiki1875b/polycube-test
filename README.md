@@ -1,5 +1,61 @@
 # 폴리큐브 백엔드 개발자 코딩 테스트
 
+## 개발하며 고민했던 사항
+
+### 패키지 구조
+
+domain 과 common 으로 나눈다.
+
+원칙 1. domain 은 순수성을 띄도록 하되, 다음은 예외적으로 허용한다.
+- JPA, Lombok
+- domain은 비즈니스 규칙을 담는 계층이다
+- domain은 common을 모른다
+
+원칙 2. common은 기술 기반의 구현을 포함한다.
+- Controller / Adapter / Filter / AOP 등을 여기 구현한다.
+
+```
+app
+ ├─ domain
+ │   ├─ user
+ │   │   ├─ User.java
+ │   │   ├─ UserService.java
+ │   │   └─ UserRepositoryPort.java
+ │   └─ lotto
+ │       ├─ Lotto.java
+ │       ├─ LottoService.java
+ │       ├─ LottoRepositoryPort.java
+ │       └─ WinnerRepositoryPort.java
+ └─ common
+     ├─ api (Controller)
+     ├─ adapter (Repository Adapter + JPA)
+     ├─ filter
+     ├─ aop
+     ├─ scheduler
+     ├─ dto
+     ├─ config
+     └─ exception
+
+```
+
+
+### Repository
+
+- Port & Adapter 패턴 도입 : DB종류가 아직 확정되지 않은(H2) 환경이므로 Port & Adapter 패턴을 도입하여 추후 DB변경시에도 확장성/유지보수성을 확보할 수 있도록 구현했습니다.
+
+
+### 기타 고민
+
+- [작성한 블로그 글](https://codingjw.tistory.com/216)
+- `LottoService`는 Batch 처리, 번호 생성 등 정책 변경 가능성이 높아 인터페이스를 사용하여 향후 구현체 교체에 대비했습니다.
+- `UserService`는 현재 요구사항이 간단하고 변경 가능성이 낮다고 판단하여 인터페이스를 생략하고 구현 클래스(`UserService`)를 바로 사용했습니다. (추후 복잡도 증가 시 인터페이스 전환 고려)
+- `LottoService` -> `WinnerService` 참조 Winner 엔티티는 Lotto에 종속적인 결과물이며, 당첨 로직이 Lotto 도메인 내의 중요한 정책이라고 판단하여, 중간 서비스 없이 `LottoService`가 `WinnerService`를 직접 참조하도록 설계했습니다.
+- 검수 배치시, 데이터가 대량으로 늘어날 경우 Pagination 또는 Chunk-Oriented Processing을 적용해야 하지만, 현재 요구사항의 범위를 벗어나므로 `findAll()`로 단순 구현했습니다. 
+- 요구사항에 **발급 일자** 관련 컬럼이 없으므로, 미발급 번호의 재검사 여부에 대한 고민을 배제하고 요구사항대로 모든 기존 `lotto` 테이블 데이터를 대상으로 당첨 검사를 진행했습니다.
+- 트랜잭션 관리: 단일 행에 대한 단순 CRUD 작업(`createUser`, `getUser`)은 `@Transactional`을 생략하고, 다중 작업 및 쓰기 작업이 포함된 `generateWinners`와 같이 비즈니스 경계가 명확한 메서드에만 적용하여 트랜잭션의 범위를 최소화했습니다.
+
+
+
 ## 1. 시작하기
 
 ### 1.1. 개발 환경
@@ -126,3 +182,6 @@ id,lotto_id,rank
 
 - 개발이 완료되면, 본인의 github 리포지토리에 올리고 해당 주소를 보내주시면 됩니다.
 - 응시자가 개발하면서 고민했던 점, 혹은 어려웠던 점을 프로젝트 설명에 간단히 적어주시면 됩니다. (선택사항)
+
+
+
