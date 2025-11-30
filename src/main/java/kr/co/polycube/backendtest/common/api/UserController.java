@@ -8,6 +8,7 @@ import kr.co.polycube.backendtest.common.dto.UserResponse;
 import kr.co.polycube.backendtest.domain.user.User;
 import kr.co.polycube.backendtest.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,7 +28,7 @@ public class UserController {
   @PostMapping
   public ResponseEntity<UserCreateResponse> createUser(@Valid @RequestBody UserRequest request){
     User savedUser = userService.createUser(request.name());
-    return ResponseEntity.ok(UserCreateResponse.from(savedUser));
+    return ResponseEntity.status(HttpStatus.CREATED).body(UserCreateResponse.from(savedUser));
   }
 
   @GetMapping("/{id}")

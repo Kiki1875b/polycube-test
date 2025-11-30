@@ -20,4 +20,9 @@ public class WinnerJpaRepositoryAdapter implements WinnerRepositoryPort {
   public List<Winner> saveAll(List<Winner> winners) {
     return winnerRepository.saveAll(winners);
   }
+
+  @Override
+  public List<Winner> findAll() {
+    return winnerRepository.findAll();
+  }
 }

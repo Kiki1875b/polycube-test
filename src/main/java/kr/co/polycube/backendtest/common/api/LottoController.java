@@ -4,6 +4,7 @@ import kr.co.polycube.backendtest.common.dto.LottoResponse;
 import kr.co.polycube.backendtest.domain.lotto.Lotto;
 import kr.co.polycube.backendtest.domain.lotto.LottoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,6 @@ public class LottoController {
   @PostMapping
   public ResponseEntity<LottoResponse> generateLotto(){
     Lotto lotto = lottoService.generateLotto();
-    return ResponseEntity.ok(LottoResponse.from(lotto));
+    return ResponseEntity.status(HttpStatus.CREATED).body(LottoResponse.from(lotto));
   }
 }
