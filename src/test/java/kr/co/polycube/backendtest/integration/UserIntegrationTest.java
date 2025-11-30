@@ -37,7 +37,7 @@ public class UserIntegrationTest {
     mockMvc.perform(post("/users")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").exists());
   }
 
@@ -50,7 +50,7 @@ public class UserIntegrationTest {
     String response = mockMvc.perform(post("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andReturn()
         .getResponse()
         .getContentAsString();
