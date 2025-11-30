@@ -6,6 +6,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,5 +52,17 @@ public class Lotto {
 
   public int[] toArray() {
     return new int[]{number1, number2, number3, number4, number5, number6};
+  }
+
+  @Override
+  public int hashCode(){
+    return Objects.hash(id);
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if(o == null) return false;
+    Lotto l = (Lotto) o;
+    return Objects.equals(l.id, this.id);
   }
 }

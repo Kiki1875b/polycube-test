@@ -1,5 +1,9 @@
 package kr.co.polycube.backendtest.domain.lotto;
 
-public class LottoService {
+import java.util.List;
 
+public interface LottoService {
+  Lotto generateLotto();
+
+  void generateWinners(int[] winningNumbers);
 }
